@@ -1,0 +1,65 @@
+
+#include "pch.h";
+
+using namespace std;
+
+#define DllExport __declspec(dllexport)
+#include <string>;
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+DllExport char* getText() {
+    HWND hWnd = GetForegroundWindow();
+    DWORD fromId = GetCurrentThreadId();
+    DWORD pid = GetWindowThreadProcessId(hWnd, NULL);
+    AttachThreadInput(fromId, pid, TRUE);
+    HWND focus = GetFocus();
+
+    DWORD start;
+    DWORD end;
+    SendMessage(focus, EM_GETSEL, (WPARAM)&start, (LPARAM)&end);
+
+    if (start == end) return 0;
+
+    // Get prev data
+    OpenClipboard(NULL);
+
+    HANDLE tempClipboardData_in = GetClipboardData(CF_TEXT);
+    char* tempString = (char*)GlobalLock(tempClipboardData_in);
+
+    HGLOBAL tempClipboardData = GlobalAlloc(GMEM_DDESHARE, strlen(tempString) + 1);
+    char* tempPchData = (char*)GlobalLock(tempClipboardData);
+    strcpy_s(tempPchData, strlen(tempString) + 1, (char*)(LPCTSTR)(tempString));
+    GlobalUnlock(tempClipboardData);
+
+    CloseClipboard();
+
+
+    // COPY, GET DATA
+    SendMessage(focus, WM_COPY, 0, 0);
+
+    OpenClipboard(NULL);
+
+    HANDLE hClipboardData = GetClipboardData(CF_TEXT);
+    char* pchData = (char*)GlobalLock(hClipboardData);
+    //char* pchData_copy = new char[strlen(pchData) + 1]();
+    //strcpy_s(pchData_copy, strlen(pchData) + 1, (char*)(LPCTSTR)(pchData));
+
+    CloseClipboard();
+    
+    // Set prev data
+    OpenClipboard(NULL);
+    EmptyClipboard();
+
+    SetClipboardData(CF_TEXT, tempClipboardData);
+
+    CloseClipboard();
+   
+
+    return pchData;
+}
+#ifdef __cplusplus
+}
+#endif

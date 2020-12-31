@@ -1,0 +1,8 @@
+node_modules
+src/.vs
+src/Debug
+src/Release
+dll/*
+src/x64
+package-lock.json
+.vscode

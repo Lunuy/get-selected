@@ -1,0 +1,28 @@
+{
+  "name": "get-selected",
+  "version": "1.0.0",
+  "description": "Get selected text from any window",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "cd src && msbuild /p:Configuration=Release /p:Platform=x86 && msbuild /p:Configuration=Release /p:Platform=x64 && copy .\\Release\\src.dll ..\\dll\\x86.dll && copy .\\x64\\Release\\src.dll ..\\dll\\x64.dll",
+    "example": "node ./example/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lunuy/get-selected.git"
+  },
+  "keywords": [
+    "selected",
+    "winapi",
+    "text"
+  ],
+  "author": "Lunuy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lunuy/get-selected/issues"
+  },
+  "homepage": "https://github.com/Lunuy/get-selected#readme",
+  "dependencies": {
+    "ffi-napi": "^3.1.0"
+  }
+}
